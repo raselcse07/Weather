@@ -15,6 +15,7 @@ class AddCityTVC: UITableViewController, UISearchBarDelegate {
     
     @IBOutlet weak var searchBarText: UISearchBar!
     var cities: [CityListElement] = Array()
+    var delegate: DataAdding? = nil 
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,6 +83,7 @@ extension AddCityTVC {
                     // MARK: - Insert unique value to City Model
                     try! realm.write {
                         realm.add(city)
+                        self.delegate?.isAdded(status: true)
                     }
                 }
                 print(Realm.Configuration.defaultConfiguration.fileURL!) // for database location

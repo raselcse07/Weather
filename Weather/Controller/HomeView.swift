@@ -10,7 +10,7 @@ import UIKit
 import RealmSwift
 import Alamofire
 
-class HomeView: UITableViewController {
+class HomeView: UITableViewController, DataAdding {
 
     let realm = try! Realm()
     lazy var cities: Results<City> = { self.realm.objects(City.self) }() // All Cities
@@ -28,11 +28,6 @@ class HomeView: UITableViewController {
 
         tableView.tableFooterView = UIView()
         tableView.backgroundView = UIImageView(image: UIImage(named: "weather"))
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        tableView.reloadData()
     }
 
 }
@@ -53,6 +48,8 @@ extension HomeView {
         
         let storyBoard = UIStoryboard(name: "Main", bundle: Bundle.main)
         if let navigationVC = storyBoard.instantiateViewController(withIdentifier: "navigationVC") as? UINavigationController {
+            let vc = navigationVC.viewControllers.first as! AddCityTVC
+            vc.delegate = self
          present(navigationVC, animated: true)
         }
     }
@@ -155,5 +152,14 @@ extension HomeView {
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return "My City"
+    }
+}
+
+// Reload table
+extension HomeView {
+    func isAdded(status: Bool) {
+        if status {
+            tableView.reloadData()
+        }
     }
 }
